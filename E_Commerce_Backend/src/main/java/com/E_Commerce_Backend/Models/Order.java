@@ -2,6 +2,7 @@ package com.E_Commerce_Backend.Models;
 
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -22,7 +23,7 @@ public class Order {
     @ManyToOne
     private User user;
     
-    @OneToMany
+    @OneToMany(mappedBy="orders",cascade = CascadeType.ALL)
     private List<OrderItem> items;
     
    

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.E_Commerce_Backend.Exception.ResourceNotFoundException;
+import com.E_Commerce_Backend.Models.Cart;
 import com.E_Commerce_Backend.Models.User;
 import com.E_Commerce_Backend.Repository.UserRepository;
 
@@ -15,9 +16,10 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
     
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
-    }
+    @Autowired
+    private CartService cartService;
+    
+   
     
     public User getUserById(int id) {
         return userRepository.findById(id)
@@ -25,7 +27,18 @@ public class UserService {
     }
     
     public User createUser(User user) {
-        return userRepository.save(user);
+    
+    	if(user.getName()!=null && user.getPassword()!=null) {
+                 
+    		User user1 = userRepository.save(user);
+        	cartService.createCart(user1);
+        	
+    		
+        	return user1;
+    	}else {
+    		throw new ResourceNotFoundException("User should not be Empty !");
+    	}
+       
     }
     
     public User updateUser(int id, User userDetails) {
@@ -37,8 +50,24 @@ public class UserService {
     }
     
     public void deleteUser(int id) {
+    	
+    	
         User user = getUserById(id);
-        userRepository.delete(user);
+        if(user!=null) {
+        	 cartService.deleteCart(id);
+        	 userRepository.delete(user);
+        }else {
+        	throw new ResourceNotFoundException("User not Found !");
+        }
+       
     }
+    
+    //viewCartItems
+    //placeYourOrder return price message
+    //cancleOrder 
+    //AddToCart input product 
+       
+       
+    
 }
 

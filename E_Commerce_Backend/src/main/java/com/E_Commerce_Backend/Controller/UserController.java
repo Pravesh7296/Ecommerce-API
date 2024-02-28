@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.E_Commerce_Backend.Models.User;
+import com.E_Commerce_Backend.Service.CartService;
 import com.E_Commerce_Backend.Service.UserService;
 
 @RestController
@@ -23,6 +24,8 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+    
+ 
 
     @GetMapping("/list")
     public ResponseEntity<List<User>> getAllUsers() {
@@ -38,7 +41,8 @@ public class UserController {
 
     @PostMapping("/create")
     public ResponseEntity<User> createUser(@RequestBody User user) {
-        User createdUser = userService.createUser(user);
+        
+    	User createdUser = userService.createUser(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
     }
 
@@ -53,4 +57,5 @@ public class UserController {
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
     }
+    
 }

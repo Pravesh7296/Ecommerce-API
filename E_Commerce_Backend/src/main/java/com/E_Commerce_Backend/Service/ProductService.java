@@ -27,12 +27,12 @@ public class ProductService {
 	}
 
 	public Product createProduct(Product product) {
-//	     Category category= product.getCategory();
-//	    Category cat= categoryRepository.findByname(category.getName());
-//	      if(cat!=null) {
-//	    	  product.setCategory(cat);
-//	    	  
-//	      }
+	     Category category= product.getCategory();
+	    Category cat= categoryRepository.findByname(category.getName());
+	      if(cat!=null) {
+	    	  product.setCategory(cat);
+	    	  
+	      }
 	    
 		return productRepository.save(product);
 	}
