@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.E_Commerce_Backend.Exception.ResourceNotFoundException;
 import com.E_Commerce_Backend.Models.Cart;
 import com.E_Commerce_Backend.Models.User;
+import com.E_Commerce_Backend.Repository.CartRepository;
 import com.E_Commerce_Backend.Repository.UserRepository;
 
 @Service
@@ -15,11 +16,11 @@ public class UserService {
     
     @Autowired
     private UserRepository userRepository;
-    
     @Autowired
-    private CartService cartService;
-    
-   
+    private CartRepository cartRepository;
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
     
     public User getUserById(int id) {
         return userRepository.findById(id)
@@ -27,18 +28,15 @@ public class UserService {
     }
     
     public User createUser(User user) {
-    
-    	if(user.getName()!=null && user.getPassword()!=null) {
-                 
-    		User user1 = userRepository.save(user);
-        	cartService.createCart(user1);
-        	
-    		
-        	return user1;
-    	}else {
-    		throw new ResourceNotFoundException("User should not be Empty !");
-    	}
-       
+    	 User savedUser = userRepository.save(user);
+
+         // Automatically create a cart for the user
+         Cart cart = new Cart();
+         cart.setUser(savedUser); // Associate the user with the cart
+         cartRepository.save(cart);
+
+         // Return the saved user
+         return savedUser;
     }
     
     public User updateUser(int id, User userDetails) {
@@ -49,25 +47,10 @@ public class UserService {
         return userRepository.save(user);
     }
     
-    public void deleteUser(int id) {
-    	
-    	
-        User user = getUserById(id);
-        if(user!=null) {
-        	 cartService.deleteCart(id);
-        	 userRepository.delete(user);
-        }else {
-        	throw new ResourceNotFoundException("User not Found !");
-        }
-       
+    public void deleteUser(int userId) {
+    	  User user = userRepository.findById(userId)
+          .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userId));
+    	  	userRepository.delete(user);
     }
-    
-    //viewCartItems
-    //placeYourOrder return price message
-    //cancleOrder 
-    //AddToCart input product 
-       
-       
-    
 }
 

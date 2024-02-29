@@ -16,15 +16,10 @@ public class Product {
 	private int id;
      @NotEmpty
 	 private String title;
-     
 	 private double price;
-     @NotEmpty
 	 private String description;
-    
 	 private boolean availability;
-     
-     private int stock;
-	 
+	 private int stock;
 	 @ManyToOne
 	 private Category category;
 	   
